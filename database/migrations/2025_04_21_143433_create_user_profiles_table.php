@@ -18,12 +18,12 @@ return new class extends Migration
             $table->string('last_name');
             $table->date('date_of_birth');
             $table->enum('sex', ['Male', 'Female', 'Other', 'PreferNotToSay']);
-            $table->integer('height_cm');
-            $table->decimal('current_weight_kg', 5, 2);
-            $table->foreignId('activity_level_id')->constrained();
-            $table->foreignId('fitness_goal_id')->constrained();
-            $table->foreignId('experience_level_id')->constrained();
-            $table->foreignId('workout_type_id')->constrained();
+            $table->integer('height_cm')->nullable();  // Make nullable
+            $table->decimal('current_weight_kg', 5, 2)->nullable();  // Make nullable
+            $table->foreignId('activity_level_id')->nullable()->constrained();  // Make nullable
+            $table->foreignId('fitness_goal_id')->nullable()->constrained();  // Make nullable
+            $table->foreignId('experience_level_id')->nullable()->constrained();  // Make nullable
+            $table->foreignId('workout_type_id')->nullable()->constrained('workout_types');  // Make nullable and fix the field name
             $table->timestamp('last_profile_update')->nullable();
             $table->timestamps();
         });

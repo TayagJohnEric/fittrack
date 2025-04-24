@@ -86,41 +86,65 @@ class User extends Authenticatable
 
     public function allergies()
     {
-        return $this->belongsToMany(Allergy::class, 'user_allergies');
+        return $this->belongsToMany(Allergy::class, 'user_allergies', 'user_id', 'allergy_id');
     }
 
     // Helper methods
     public function calculateDailyCalories()
     {
-        // Implement TDEE calculation based on user profile
-        if (!$this->profile) {
+        try {
+            if (!$this->profile) {
+                throw new \Exception('User profile not found. Please complete your profile to calculate daily calories.');
+            }
+            
+            if (!$this->profile->activityLevel) {
+                throw new \Exception('Activity level not set. Please set your activity level in your profile.');
+            }
+            
+            $profile = $this->profile;
+            $activityMultiplier = $profile->activityLevel->multiplier ?? 1.2;
+            
+            // Validate required fields
+            if (!$profile->current_weight_kg || !$profile->height_cm || !$profile->date_of_birth || !$profile->sex) {
+                throw new \Exception('Required profile information missing. Please complete your profile with weight, height, date of birth, and sex.');
+            }
+            
+            // Basic BMR using Harris-Benedict equation
+            $bmr = 0;
+            if ($profile->sex === 'Male') {
+                $bmr = 88.362 + (13.397 * $profile->current_weight_kg) + 
+                       (4.799 * $profile->height_cm) - (5.677 * $profile->getAge());
+            } else {
+                $bmr = 447.593 + (9.247 * $profile->current_weight_kg) + 
+                       (3.098 * $profile->height_cm) - (4.330 * $profile->getAge());
+            }
+            
+            return $bmr * $activityMultiplier;
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Error calculating daily calories: ' . $e->getMessage());
             return null;
         }
-        
-        // Example basic calculation (would be more complex in real implementation)
-        $profile = $this->profile;
-        $activityMultiplier = $profile->activityLevel->multiplier ?? 1.2;
-        
-        // Basic BMR using Harris-Benedict equation
-        $bmr = 0;
-        if ($profile->sex === 'Male') {
-            $bmr = 88.362 + (13.397 * $profile->current_weight_kg) + 
-                   (4.799 * $profile->height_cm) - (5.677 * $profile->getAge());
-        } else {
-            $bmr = 447.593 + (9.247 * $profile->current_weight_kg) + 
-                   (3.098 * $profile->height_cm) - (4.330 * $profile->getAge());
-        }
-        
-        return $bmr * $activityMultiplier;
     }
 
     public function getCurrentBmi()
     {
-        if (!$this->profile) {
+        try {
+            if (!$this->profile) {
+                throw new \Exception('User profile not found. Please complete your profile to calculate BMI.');
+            }
+            
+            // Validate required fields
+            if (!$this->profile->current_weight_kg || !$this->profile->height_cm) {
+                throw new \Exception('Required profile information missing. Please complete your profile with weight and height.');
+            }
+            
+            $heightInMeters = $this->profile->height_cm / 100;
+            return $this->profile->current_weight_kg / ($heightInMeters * $heightInMeters);
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Error calculating BMI: ' . $e->getMessage());
             return null;
         }
-        
-        $heightInMeters = $this->profile->height_cm / 100;
-        return $this->profile->current_weight_kg / ($heightInMeters * $heightInMeters);
     }
+
+ 
 }

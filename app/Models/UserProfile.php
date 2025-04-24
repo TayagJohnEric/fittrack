@@ -28,7 +28,7 @@ class UserProfile extends Model
         'activity_level_id',
         'fitness_goal_id',
         'experience_level_id',
-        'preferred_workout_type_id',
+        'workout_type_id',
         'last_profile_update',
     ];
 
@@ -60,7 +60,7 @@ class UserProfile extends Model
 
     public function preferredWorkoutType()
     {
-        return $this->belongsTo(WorkoutType::class, 'preferred_workout_type_id');
+        return $this->belongsTo(WorkoutType::class, 'workout_type_id');
     }
 
     // Helper methods

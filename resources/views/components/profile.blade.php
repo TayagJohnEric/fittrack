@@ -5,8 +5,8 @@
 
     <!-- Name & Email -->
     <div class="hidden sm:block">
-        <p class="text-sm font-medium text-gray-900">John Doe</p>
-        <p class="text-sm text-gray-500 truncate">johndoe@example.com</p>
+        <p class="text-sm font-medium text-gray-900">{{$profile->first_name}}</p>
+        <p class="text-sm text-gray-500 truncate">{{$user->email}}</p>
     </div>
 
     <!-- Dropdown Trigger -->
@@ -37,14 +37,18 @@
 
             <div class="border-t border-gray-100"></div>
 
-            <a href="#" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-500 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-                    <polyline points="16 17 21 12 16 7"/>
-                    <line x1="21" x2="9" y1="12" y2="12"/>
-                </svg>
-                <span>Logout</span>
-            </a>
+            <form method="POST" action="{{ route('logout') }}">
+                @csrf
+                <button type="submit" class="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-500 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                        <polyline points="16 17 21 12 16 7"/>
+                        <line x1="21" x2="9" y1="12" y2="12"/>
+                    </svg>
+                    <span>Logout</span>
+                </button>
+            </form>
+            
         </div>
     </div>
 </div>
