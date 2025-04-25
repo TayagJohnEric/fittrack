@@ -1,5 +1,5 @@
 <!-- Sidebar (hidden on mobile) -->
-<div id="sidebar" class="hidden md:flex fixed md:static flex-col w-64 h-full bg-gray-50 text-gray-700 shadow-sm transition-all duration-300 z-50">
+<div id="sidebar" class="hidden md:flex fixed md:static flex-col w-64 h-full bg-gray-100 text-gray-700 shadow-sm transition-all duration-300 z-50">
     <!-- Sidebar Header -->
     <div class="flex items-center justify-center h-16 px-4 relative">
         <img src="{{ asset('images/logo-black.png') }}" alt="Example" class="h-8 w-auto">
@@ -14,7 +14,7 @@
         <ul class="space-y-2 px-4">
             <!-- Sidebar Menu Items -->
             <li>
-                <a href="#" class="group flex items-center font-medium p-2 rounded-lg hover:bg-gray-800 hover:text-white transition-colors">
+                <a href="#" class="group flex items-center font-semibold p-2 rounded-lg text-gray-600 no-underline hover:bg-gray-800 hover:text-white transition-colors">
                     <!-- Home -->
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -26,7 +26,7 @@
                 </a>
             </li>
             <li>
-                <a href="#" class="group flex items-center font-medium p-2 rounded-lg hover:bg-gray-800 hover:text-white transition-colors">
+                <a href="#" class="group flex items-center font-semibold p-2 rounded-lg text-gray-600 no-underline hover:bg-gray-800 hover:text-white transition-colors">
                     <!-- Nutrition -->
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -38,7 +38,7 @@
                 </a>
             </li>
             <li>
-                <a href="#" class="group flex items-center font-medium p-2 rounded-lg hover:bg-gray-800 hover:text-white transition-colors">
+                <a href="#" class="group flex items-center font-semibold p-2 rounded-lg text-gray-600 no-underline hover:bg-gray-800 hover:text-white transition-colors">
                     <!-- Workouts -->
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -53,7 +53,7 @@
                 </a>
             </li>
             <li>
-                <a href="#" class="group flex items-center font-medium p-2 rounded-lg hover:bg-gray-800 hover:text-white transition-colors">
+                <a href="#" class="group flex items-center font-semibold p-2 rounded-lg text-gray-600 no-underline hover:bg-gray-800 hover:text-white transition-colors">
                     <!-- Progress -->
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -65,7 +65,7 @@
                 </a>
             </li>
             <li>
-                <a href="#" class="group flex items-center font-medium p-2 rounded-lg hover:bg-gray-800 hover:text-white transition-colors">
+                <a href="#" class="group flex items-center font-semibold p-2 rounded-lg text-gray-600 no-underline hover:bg-gray-800 hover:text-white transition-colors">
                     <!-- Profile -->
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
