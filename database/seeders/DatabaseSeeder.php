@@ -13,11 +13,14 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        $this->call([
+            ActivityLevelSeeder::class,
+            FitnessGoalSeeder::class,
+            ExperienceLevelSeeder::class,
+            WorkoutTypeSeeder::class,
+            AllergySeeder::class,
+            FoodItemSeeder::class, // Added food item seeder
         ]);
     }
 }

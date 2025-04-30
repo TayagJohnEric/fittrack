@@ -57,7 +57,7 @@
                 <a href="#contact" class="text-gray-300 hover:text-white transition">Contact</a>
             </div>
             <div class="flex items-center">
-                <a href="#" class="px-4 py-2 text-gray-900 bg-white rounded-3xl font-medium hover:bg-gray-200 transition">Sign Up</a>
+                <a href="{{route('register')}}" class="px-4 py-2 text-gray-900 bg-white rounded-3xl font-medium hover:bg-gray-200 transition">Sign Up</a>
             </div>
         </div>
     </div>
@@ -71,7 +71,7 @@
             <h1 id="hero-title" class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 opacity-0">Transform Your Fitness Journey</h1>
             <p id="hero-subtitle" class="text-xl md:text-2xl max-w-3xl mb-10 opacity-0">The comprehensive web-based solution for personalized workout plans and real-time nutrition tracking.</p>
             <div id="hero-buttons" class="flex flex-col sm:flex-row gap-4 opacity-0">
-                <a href="#" class="px-8 py-3 bg-white text-gray-900 font-semibold rounded-3xl hover:bg-gray-200 transition">Get Started</a>
+                <a href="{{route('login')}}" class="px-8 py-3 bg-white text-gray-900 font-semibold rounded-3xl hover:bg-gray-200 transition">Get Started</a>
                 <a href="#learn-more" class="px-8 py-3 bg-transparent border-2 border-white text-white rounded-3xl hover:bg-white hover:text-gray-900 transition">Learn More</a>
             </div>
         </div>

@@ -15,7 +15,6 @@ class ActivityLevel extends Model
     protected $fillable = [
         'name',
         'description',
-        'multiplier', // TDEE multiplier for this activity level
     ];
 
     // Relationships

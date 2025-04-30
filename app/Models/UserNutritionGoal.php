@@ -46,11 +46,11 @@ class UserNutritionGoal extends Model
         // Adjust based on fitness goal
         $goalName = $user->profile->fitnessGoal->name ?? '';
         
-        if (stripos($goalName, 'weight loss') !== false) {
+        if (stripos($goalName, 'Weight Loss') !== false) {
             $calorieTarget = $baseCalories * 0.8; // 20% deficit
             $proteinTarget = $user->profile->current_weight_kg * 2.0; // Higher protein for weight loss
             $fatTarget = $user->profile->current_weight_kg * 0.8;
-        } elseif (stripos($goalName, 'muscle gain') !== false) {
+        } elseif (stripos($goalName, 'Muscle Gain') !== false) {
             $calorieTarget = $baseCalories * 1.1; // 10% surplus
             $proteinTarget = $user->profile->current_weight_kg * 2.2; // Higher protein for muscle gain
             $fatTarget = $user->profile->current_weight_kg * 1.0;
