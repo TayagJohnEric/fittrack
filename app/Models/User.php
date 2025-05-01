@@ -89,42 +89,54 @@ class User extends Authenticatable
         return $this->belongsToMany(Allergy::class, 'user_allergies', 'user_id', 'allergy_id');
     }
 
-    // Helper methods
+     /**
+     * Calculate daily calorie requirements based on user profile
+     * 
+     * @return float|null
+     */
     public function calculateDailyCalories()
     {
-        try {
-            if (!$this->profile) {
-                throw new \Exception('User profile not found. Please complete your profile to calculate daily calories.');
-            }
-            
-            if (!$this->profile->activityLevel) {
-                throw new \Exception('Activity level not set. Please set your activity level in your profile.');
-            }
-            
-            $profile = $this->profile;
-            $activityMultiplier = $profile->activityLevel->multiplier ?? 1.2;
-            
-            // Validate required fields
-            if (!$profile->current_weight_kg || !$profile->height_cm || !$profile->date_of_birth || !$profile->sex) {
-                throw new \Exception('Required profile information missing. Please complete your profile with weight, height, date of birth, and sex.');
-            }
-            
-            // Basic BMR using Harris-Benedict equation
-            $bmr = 0;
-            if ($profile->sex === 'Male') {
-                $bmr = 88.362 + (13.397 * $profile->current_weight_kg) + 
-                       (4.799 * $profile->height_cm) - (5.677 * $profile->getAge());
-            } else {
-                $bmr = 447.593 + (9.247 * $profile->current_weight_kg) + 
-                       (3.098 * $profile->height_cm) - (4.330 * $profile->getAge());
-            }
-            
-            return $bmr * $activityMultiplier;
-        } catch (\Exception $e) {
-            \Illuminate\Support\Facades\Log::error('Error calculating daily calories: ' . $e->getMessage());
+        $profile = $this->profile;
+        
+        if (!$profile || !$profile->height_cm || !$profile->current_weight_kg || !$profile->date_of_birth) {
             return null;
         }
+        
+        // Calculate BMR using the Mifflin-St Jeor Equation
+        $age = $profile->getAge();
+        $weight = $profile->current_weight_kg;
+        $height = $profile->height_cm;
+        
+        // BMR formula
+        if (strtolower($profile->sex) == 'male') {
+            $bmr = 10 * $weight + 6.25 * $height - 5 * $age + 5;
+        } else {
+            $bmr = 10 * $weight + 6.25 * $height - 5 * $age - 161;
+        }
+        
+        // Activity multiplier
+        $activityMultiplier = 1.2; // Default to sedentary
+        
+        if ($profile->activityLevel) {
+            $activityName = strtolower($profile->activityLevel->name);
+            
+            if (strpos($activityName, 'sedentary') !== false) {
+                $activityMultiplier = 1.2;
+            } elseif (strpos($activityName, 'light') !== false) {
+                $activityMultiplier = 1.375;
+            } elseif (strpos($activityName, 'moderate') !== false) {
+                $activityMultiplier = 1.55;
+            } elseif (strpos($activityName, 'active') !== false || strpos($activityName, 'high') !== false) {
+                $activityMultiplier = 1.725;
+            } elseif (strpos($activityName, 'very') !== false || strpos($activityName, 'extreme') !== false) {
+                $activityMultiplier = 1.9;
+            }
+        }
+        
+        // TDEE (Total Daily Energy Expenditure)
+        return $bmr * $activityMultiplier;
     }
+
 
     public function getCurrentBmi()
     {
@@ -146,5 +158,16 @@ class User extends Authenticatable
         }
     }
 
- 
+   /**
+     * Check if user has completed onboarding
+     * 
+     * @return bool
+     */
+    public function hasCompletedOnboarding()
+    {
+        return $this->nutritionGoals()->exists() && 
+               $this->bmiRecords()->exists() && 
+               $this->weightHistory()->exists() && 
+               $this->workoutSchedules()->exists();
+    }
 }

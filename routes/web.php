@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\AllergyController;
 use App\Http\Controllers\ProfileSetupController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\OnboardingController;
 
 
 
@@ -16,7 +17,6 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
 
 Route::get('/onlyadmin', function () {
@@ -53,6 +53,17 @@ Route::prefix('admin')->name('admin.')->group(function () {
 });
 
 
+
+
+
+
+
+
+
+
+
+
+
 // Authentication routes
 Route::middleware('guest')->group(function () {
     Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
@@ -63,14 +74,30 @@ Route::middleware('guest')->group(function () {
 
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
 
-// Profile setup routes
-Route::middleware('auth')->prefix('profile/setup')->name('profile.setup.')->group(function () {
-    Route::get('/basics', [ProfileSetupController::class, 'showBasics'])->name('basics');
-    Route::post('/basics', [ProfileSetupController::class, 'storeBasics']);
-    Route::get('/physical', [ProfileSetupController::class, 'showPhysical'])->name('physical');
-    Route::post('/physical', [ProfileSetupController::class, 'storePhysical']);
-    Route::get('/preferences', [ProfileSetupController::class, 'showPreferences'])->name('preferences');
-    Route::post('/preferences', [ProfileSetupController::class, 'storePreferences'])->name('preferences.store');
+/// Add these routes to your existing routes file
+Route::middleware(['auth'])->group(function () {
+    // Profile setup routes
+    Route::prefix('profile/setup')->name('profile.setup.')->group(function () {
+        Route::get('/basics', [App\Http\Controllers\ProfileSetupController::class, 'showBasics'])->name('basics');
+        Route::post('/basics', [App\Http\Controllers\ProfileSetupController::class, 'storeBasics']);
+        Route::get('/physical', [App\Http\Controllers\ProfileSetupController::class, 'showPhysical'])->name('physical');
+        Route::post('/physical', [App\Http\Controllers\ProfileSetupController::class, 'storePhysical']);
+        Route::get('/preferences', [App\Http\Controllers\ProfileSetupController::class, 'showPreferences'])->name('preferences');
+        Route::post('/preferences', [App\Http\Controllers\ProfileSetupController::class, 'storePreferences'])->name('preferences.store');
+    });
+    
+    // Onboarding route (no onboarding middleware to prevent redirect loops)
+    Route::get('/onboarding', [App\Http\Controllers\OnboardingController::class, 'processOnboarding'])
+        ->name('onboarding.process');
+        
+    // Routes that require onboarding to be completed
+    Route::middleware(['onboarding'])->group(function () {
+        // Dashboard route
+        Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'index'])
+            ->name('dashboard');
+            
+        // Other authenticated routes that require completed onboarding
+        // ...
+    });
 });
-
 

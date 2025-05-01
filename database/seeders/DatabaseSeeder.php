@@ -2,7 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Models\Exercise;
 use App\Models\User;
+use App\Models\WorkoutTemplate;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -20,7 +22,9 @@ class DatabaseSeeder extends Seeder
             ExperienceLevelSeeder::class,
             WorkoutTypeSeeder::class,
             AllergySeeder::class,
-            FoodItemSeeder::class, // Added food item seeder
+            FoodItemSeeder::class,
+            ExerciseSeeder::class,
+            WorkoutTemplateSeeder::class,
         ]);
     }
 }

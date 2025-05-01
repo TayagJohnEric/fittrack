@@ -20,6 +20,11 @@ class ProfileSetupController extends Controller
         $user = Auth::user();
         $profile = $user->profile;
 
+        // If user already completed onboarding, redirect to dashboard
+        if ($user->hasCompletedOnboarding()) {
+            return redirect()->route('dashboard');
+        }
+
         return view('profile.setup_basics', compact('profile'));
     }
 
@@ -152,7 +157,8 @@ class ProfileSetupController extends Controller
                 $user->allergies()->sync($validated['allergies']);
             }
 
-            return redirect()->route('dashboard')->with('success', 'Profile setup completed successfully!');
+            // Redirect to onboarding process instead of dashboard
+            return redirect()->route('onboarding.process');
         } catch (\Exception $e) {
             Log::error('Error storing preferences: ' . $e->getMessage());
             return back()->withErrors(['error' => 'Failed to save preferences. Please try again.']);

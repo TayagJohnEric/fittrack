@@ -20,6 +20,7 @@ class WorkoutTemplate extends Model
         'description',
         'experience_level_id',
         'workout_type_id',
+        'is_generic',
     ];
 
     // Relationships
