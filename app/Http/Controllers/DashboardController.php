@@ -5,6 +5,10 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\ActivityLevel;
 use Illuminate\Support\Facades\Log;
+use App\Models\BmiRecord;
+use App\Models\UserNutritionGoal;
+use App\Models\UserWorkoutSchedule;
+use Carbon\Carbon;
 
 class DashboardController extends Controller
 {
@@ -37,9 +41,28 @@ class DashboardController extends Controller
                     ->with('error', 'Please complete your fitness preferences.');
             }
             
-            $dailyCalories = $user->calculateDailyCalories();
-            $currentBmi = $user->getCurrentBmi();
-            return view('user.dashboard', compact('user', 'profile', 'dailyCalories', 'currentBmi'));
+            // Get BMI record
+            $bmiRecord = BmiRecord::where('user_id', $user->id)
+                ->where('log_date', Carbon::today())
+                ->first();
+            
+            // Get nutrition goals
+            $nutritionGoals = UserNutritionGoal::where('user_id', $user->id)->first();
+            
+            // Get workout schedules
+            $workoutSchedules = UserWorkoutSchedule::where('user_id', $user->id)
+                ->where('assigned_date', '>=', Carbon::today())
+                ->orderBy('assigned_date')
+                ->take(7)
+                ->get();
+            
+            return view('user.dashboard', compact(
+                'user',
+                'profile',
+                'bmiRecord',
+                'nutritionGoals',
+                'workoutSchedules'
+            ));
         } catch (\Exception $e) {
             Log::error('Dashboard error: ' . $e->getMessage());
             return redirect()->route('profile.setup.basics')

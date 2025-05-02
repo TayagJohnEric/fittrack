@@ -19,9 +19,9 @@
         }
     </style>
 </head>
-<body class="bg-gray-100 min-h-screen flex items-center justify-center p-4">
+<body class="bg-white min-h-screen flex items-center justify-center p-4">
     <div class="container max-w-4xl">
-        <div class="bg-white rounded-xl shadow-md overflow-hidden">
+        <div class="bg-white rounded-xl  overflow-hidden">
     
             <!-- Card Header -->
             <div class="bg-white pt-4 pb-2 px-4"> 

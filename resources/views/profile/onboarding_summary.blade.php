@@ -8,20 +8,29 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }   
+
+        </style>
+
 </head>
-<body class="bg-gray-50 min-h-screen">
+<body class="bg-white min-h-screen">
     <div class="container mx-auto px-4 py-8">
         <div class="max-w-4xl mx-auto">
             <!-- Success Card -->
-            <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+            <div class="bg-white rounded-xl  overflow-hidden">
                 <!-- Header -->
-                <div class="bg-emerald-600 px-6 py-4 flex items-center justify-between">
-                    <h1 class="text-xl md:text-2xl font-bold text-white flex items-center">
-                        <i class="fas fa-check-circle mr-3"></i>
+                <div class="bg-white px-6 py-4 flex items-center justify-between">
+                    <h1 class="text-xl md:text-2xl font-bold text-gray-800 flex items-center">
+                        <i class="fas fa-check-circle mr-3 text-green-600"></i>
                         Onboarding Complete!
                     </h1>
-                    <div class="bg-white bg-opacity-20 rounded-full p-2">
-                        <i class="fas fa-dumbbell text-white text-xl"></i>
+                    <div class="bg-white rounded-full p-2">
+                        <i class="fas fa-dumbbell text-gray-500 text-xl"></i>
                     </div>
                 </div>
                 
@@ -34,10 +43,10 @@
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <!-- BMI Information -->
-                        <div class="bg-white rounded-lg border border-gray-200 shadow-sm h-full">
-                            <div class="bg-blue-600 text-white px-4 py-3 rounded-t-lg">
+                        <div class="bg-gray-50 rounded-lg border border-gray-200 shadow-sm h-full">
+                            <div class="text-gray-800 px-4 py-3 rounded-t-lg">
                                 <h3 class="font-semibold text-lg flex items-center">
-                                    <i class="fas fa-weight mr-2"></i>
+                                    <i class="fas fa-weight mr-2 text-gray-700"></i>
                                     Your BMI
                                 </h3>
                             </div>
@@ -102,10 +111,10 @@
                         </div>
 
                         <!-- Nutrition Goals -->
-                        <div class="bg-white rounded-lg border border-gray-200 shadow-sm h-full">
-                            <div class="bg-blue-600 text-white px-4 py-3 rounded-t-lg">
+                        <div class="bg-gray-50 rounded-lg border border-gray-200 shadow-sm h-full">
+                            <div class="bg-gray-50 text-gray-800 px-4 py-3 rounded-t-lg">
                                 <h3 class="font-semibold text-lg flex items-center">
-                                    <i class="fas fa-utensils mr-2"></i>
+                                    <i class="fas fa-utensils mr-2 text-gray-700"></i>
                                     Your Nutrition Goals
                                 </h3>
                             </div>
@@ -147,10 +156,10 @@
                     </div>
 
                     <!-- Workout Schedule -->
-                    <div class="bg-white rounded-lg border border-gray-200 shadow-sm mt-6">
-                        <div class="bg-blue-600 text-white px-4 py-3 rounded-t-lg">
+                    <div class="bg-gray-50 rounded-lg border border-gray-200 shadow-sm mt-6">
+                        <div class="bg-gray-50 text-gray-800 px-4 py-3 rounded-t-lg">
                             <h3 class="font-semibold text-lg flex items-center">
-                                <i class="fas fa-calendar-alt mr-2"></i>
+                                <i class="fas fa-calendar-alt mr-2 text-gray-700"></i>
                                 Your Workout Schedule
                             </h3>
                         </div>
@@ -198,7 +207,7 @@
 
                     <!-- CTA Button -->
                     <div class="flex justify-center mt-8">
-                        <a href="{{ route('dashboard') }}" class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-md transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 flex items-center">
+                        <a href="{{ route('dashboard') }}" class="px-3 py-2 bg-gray-800 hover:bg-gray-700 text-white font-medium text-sm rounded-lg shadow-md transition duration-200 focus:outline-none focus:ring-2 focus:ring-gray-800 focus:ring-opacity-50 flex items-center">
                             <span>Continue to Dashboard</span>
                             <i class="fas fa-arrow-right ml-2"></i>
                         </a>
@@ -209,8 +218,8 @@
             <!-- Additional Resources -->
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-6">
                 <a href="#" class="bg-white p-4 rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition duration-200 flex items-center">
-                    <div class="bg-indigo-100 p-3 rounded-full mr-3">
-                        <i class="fas fa-book text-indigo-600"></i>
+                    <div class="bg-gray-100 p-3 rounded-full mr-3">
+                        <i class="fas fa-book text-gray-500"></i>
                     </div>
                     <div>
                         <h4 class="font-medium text-gray-800">Beginner's Guide</h4>
@@ -218,8 +227,8 @@
                     </div>
                 </a>
                 <a href="#" class="bg-white p-4 rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition duration-200 flex items-center">
-                    <div class="bg-emerald-100 p-3 rounded-full mr-3">
-                        <i class="fas fa-apple-alt text-emerald-600"></i>
+                    <div class="bg-gray-100 p-3 rounded-full mr-3">
+                        <i class="fas fa-apple-alt text-gray-500"></i>
                     </div>
                     <div>
                         <h4 class="font-medium text-gray-800">Nutrition Tips</h4>
@@ -227,8 +236,8 @@
                     </div>
                 </a>
                 <a href="#" class="bg-white p-4 rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition duration-200 flex items-center">
-                    <div class="bg-orange-100 p-3 rounded-full mr-3">
-                        <i class="fas fa-heart-pulse text-orange-600"></i>
+                    <div class="bg-gray-100 p-3 rounded-full mr-3">
+                        <i class="fas fa-heart-pulse text-gray-500"></i>
                     </div>
                     <div>
                         <h4 class="font-medium text-gray-800">Community</h4>

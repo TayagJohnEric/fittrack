@@ -19,8 +19,11 @@ class OnboardingMiddleware
     {
         $user = Auth::user();
         
-        // If user hasn't completed onboarding and is not already on the onboarding route
-        if (!$user->hasCompletedOnboarding() && !$request->routeIs('onboarding.process') && !$request->routeIs('profile.create')) {
+        // If user hasn't completed onboarding and is not already on the onboarding route or login route
+        if (!$user->hasCompletedOnboarding() && 
+            !$request->routeIs('onboarding.process') && 
+            !$request->routeIs('profile.create') &&
+            !$request->routeIs('login')) {
             return redirect()->route('onboarding.process');
         }
         

@@ -46,19 +46,54 @@ class UserNutritionGoal extends Model
         // Adjust based on fitness goal
         $goalName = $user->profile->fitnessGoal->name ?? '';
         
-        if (stripos($goalName, 'Weight Loss') !== false) {
-            $calorieTarget = $baseCalories * 0.8; // 20% deficit
-            $proteinTarget = $user->profile->current_weight_kg * 2.0; // Higher protein for weight loss
-            $fatTarget = $user->profile->current_weight_kg * 0.8;
-        } elseif (stripos($goalName, 'Muscle Gain') !== false) {
-            $calorieTarget = $baseCalories * 1.1; // 10% surplus
-            $proteinTarget = $user->profile->current_weight_kg * 2.2; // Higher protein for muscle gain
-            $fatTarget = $user->profile->current_weight_kg * 1.0;
-        } else {
-            // Maintenance
-            $calorieTarget = $baseCalories;
-            $proteinTarget = $user->profile->current_weight_kg * 1.8;
-            $fatTarget = $user->profile->current_weight_kg * 0.9;
+        switch (true) {
+            case stripos($goalName, 'Weight Loss') !== false:
+                $calorieTarget = $baseCalories * 0.8; // 20% deficit
+                $proteinTarget = $user->profile->current_weight_kg * 2.0; // Higher protein for weight loss
+                $fatTarget = $user->profile->current_weight_kg * 0.8;
+                break;
+                
+            case stripos($goalName, 'Muscle Gain') !== false:
+                $calorieTarget = $baseCalories * 1.1; // 10% surplus
+                $proteinTarget = $user->profile->current_weight_kg * 2.2; // Higher protein for muscle gain
+                $fatTarget = $user->profile->current_weight_kg * 1.0;
+                break;
+                
+            case stripos($goalName, 'Strength Building') !== false:
+                $calorieTarget = $baseCalories * 1.05; // 5% surplus
+                $proteinTarget = $user->profile->current_weight_kg * 2.0;
+                $fatTarget = $user->profile->current_weight_kg * 0.9;
+                break;
+                
+            case stripos($goalName, 'Body Recomposition') !== false:
+                $calorieTarget = $baseCalories * 0.95; // Slight deficit
+                $proteinTarget = $user->profile->current_weight_kg * 2.2; // Higher protein for body recomposition
+                $fatTarget = $user->profile->current_weight_kg * 0.9;
+                break;
+                
+            case stripos($goalName, 'Athletic Performance') !== false:
+                $calorieTarget = $baseCalories * 1.15; // Higher surplus for performance
+                $proteinTarget = $user->profile->current_weight_kg * 1.8;
+                $fatTarget = $user->profile->current_weight_kg * 1.1;
+                break;
+                
+            case stripos($goalName, 'Improve Endurance') !== false:
+                $calorieTarget = $baseCalories * 1.1; // Higher carbs for endurance
+                $proteinTarget = $user->profile->current_weight_kg * 1.6;
+                $fatTarget = $user->profile->current_weight_kg * 0.8;
+                break;
+                
+            case stripos($goalName, 'Maintain Current Fitness') !== false:
+                $calorieTarget = $baseCalories;
+                $proteinTarget = $user->profile->current_weight_kg * 1.6;
+                $fatTarget = $user->profile->current_weight_kg * 0.9;
+                break;
+                
+            default: // Improve General Fitness, Increase Flexibility, etc.
+                $calorieTarget = $baseCalories;
+                $proteinTarget = $user->profile->current_weight_kg * 1.8;
+                $fatTarget = $user->profile->current_weight_kg * 0.9;
+                break;
         }
         
         // Calculate carbs based on remaining calories

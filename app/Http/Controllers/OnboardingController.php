@@ -58,14 +58,14 @@ class OnboardingController extends Controller
         // 4. Assign workout templates based on user preferences
         $workoutSchedules = $this->assignWorkoutSchedules($user, $profile);
         
-        // 5. Show confirmation summary
+        // 5. Show confirmation summary and redirect to dashboard
         return view('profile.onboarding_summary', compact(
             'profile', 
             'bmiRecord', 
             'weightRecord', 
             'nutritionGoals', 
             'workoutSchedules'
-        ));
+        ))->with('success', 'Onboarding completed successfully!');
     }
     
     /**
@@ -132,26 +132,47 @@ class OnboardingController extends Controller
      */
     private function generateNutritionGoals($user, $profile)
     {
-        // Check if nutrition goals already exist
-        $existingGoals = UserNutritionGoal::where('user_id', $user->id)->first();
+        // Calculate base calories
+        $baseCalories = $user->calculateDailyCalories();
         
-        if ($existingGoals) {
-            // Update existing goals based on latest profile data
-            return $existingGoals->recalculate();
+        if (!$baseCalories) {
+            Log::error('Could not calculate base calories for user: ' . $user->id);
+            return null;
         }
         
-        // Create basic nutrition goal
-        $nutritionGoal = UserNutritionGoal::create([
-            'user_id' => $user->id,
-            'target_calories' => 2000, // Default value
-            'target_protein_grams' => 100, // Default value
-            'target_carb_grams' => 250, // Default value
-            'target_fat_grams' => 70, // Default value
-            'last_updated' => now()
-        ]);
+        // Adjust based on fitness goal
+        $goalName = $profile->fitnessGoal->name ?? '';
+        $calorieTarget = $baseCalories;
+        $proteinTarget = $profile->current_weight_kg * 1.8; // Default protein target
+        $fatTarget = $profile->current_weight_kg * 0.9; // Default fat target
         
-        // Recalculate with actual values based on profile
-        return $nutritionGoal->recalculate();
+        if (stripos($goalName, 'Weight Loss') !== false) {
+            $calorieTarget = $baseCalories * 0.8; // 20% deficit
+            $proteinTarget = $profile->current_weight_kg * 2.0; // Higher protein for weight loss
+            $fatTarget = $profile->current_weight_kg * 0.8;
+        } elseif (stripos($goalName, 'Muscle Gain') !== false) {
+            $calorieTarget = $baseCalories * 1.1; // 10% surplus
+            $proteinTarget = $profile->current_weight_kg * 2.2; // Higher protein for muscle gain
+            $fatTarget = $profile->current_weight_kg * 1.0;
+        }
+        
+        // Calculate carbs based on remaining calories
+        $proteinCalories = $proteinTarget * 4; // 4 calories per gram of protein
+        $fatCalories = $fatTarget * 9; // 9 calories per gram of fat
+        $remainingCalories = $calorieTarget - $proteinCalories - $fatCalories;
+        $carbTarget = max(0, $remainingCalories / 4); // 4 calories per gram of carbs
+        
+        // Create or update nutrition goals
+        return UserNutritionGoal::updateOrCreate(
+            ['user_id' => $user->id],
+            [
+                'target_calories' => round($calorieTarget),
+                'target_protein_grams' => round($proteinTarget),
+                'target_carb_grams' => round($carbTarget),
+                'target_fat_grams' => round($fatTarget),
+                'last_updated' => now()
+            ]
+        );
     }
     
     /**
@@ -163,91 +184,43 @@ class OnboardingController extends Controller
      */
     private function assignWorkoutSchedules($user, $profile)
     {
-        // Check if user already has workout schedules for this week
-        $existingSchedules = UserWorkoutSchedule::where('user_id', $user->id)
-                                               ->whereBetween('assigned_date', [
-                                                   Carbon::today(),
-                                                   Carbon::today()->addDays(7)
-                                               ])
-                                               ->get();
-                                               
-        if ($existingSchedules->count() > 0) {
-            return $existingSchedules;
+        // Get appropriate workout templates based on user preferences
+        $templates = WorkoutTemplate::where('workout_type_id', $profile->workout_type_id)
+            ->where('experience_level_id', $profile->experience_level_id)
+            ->get();
+            
+        if ($templates->isEmpty()) {
+            Log::warning('No workout templates found for user preferences: ' . $user->id);
+            return [];
         }
         
-        $workoutSchedules = [];
+        $schedules = [];
+        $startDate = Carbon::today();
         
-        // Get appropriate templates based on user preferences
-        $templates = $this->getWorkoutTemplatesForUser($profile);
-        
-        // Schedule workouts for the next 7 days
-        $startDate = Carbon::tomorrow();
-        foreach ($templates as $index => $template) {
-            // Skip weekends or limit to 5 workouts per week
-            if ($index >= 5) {
-                break;
-            }
+        // Assign workouts for the next 7 days
+        for ($i = 0; $i < 7; $i++) {
+            $date = $startDate->copy()->addDays($i);
             
-            $assignedDate = $startDate->copy()->addDays($index);
-            
-            // Skip weekend days if needed
-            if ($assignedDate->isWeekend()) {
+            // Skip if it's a rest day (e.g., every 4th day)
+            if ($i > 0 && $i % 4 === 0) {
                 continue;
             }
             
-            $workoutSchedule = UserWorkoutSchedule::create([
+            // Select a template (cycling through available templates)
+            $template = $templates[$i % $templates->count()];
+            
+            // Create workout schedule
+            $schedule = UserWorkoutSchedule::create([
                 'user_id' => $user->id,
                 'template_id' => $template->id,
-                'assigned_date' => $assignedDate,
-                'status' => 'Pending'
+                'assigned_date' => $date,
+                'status' => 'Pending',
+                'user_notes' => 'Initial workout assignment'
             ]);
             
-            $workoutSchedules[] = $workoutSchedule;
+            $schedules[] = $schedule;
         }
         
-        return $workoutSchedules;
-    }
-    
-    /**
-     * Get appropriate workout templates for the user
-     *
-     * @param \App\Models\UserProfile $profile
-     * @return \Illuminate\Database\Eloquent\Collection
-     */
-    private function getWorkoutTemplatesForUser($profile)
-    {
-        $query = WorkoutTemplate::query();
-        
-        // Filter by user experience level
-        if ($profile->experience_level_id) {
-            $query->where('experience_level_id', $profile->experience_level_id);
-        }
-        
-        // Filter by workout type if specified
-        if ($profile->workout_type_id) {
-            $query->where('workout_type_id', $profile->workout_type_id);
-        }
-        
-        // Get a few templates for variety
-        $templates = $query->inRandomOrder()->limit(7)->get();
-        
-        // If no specific templates found, get generic ones
-        if ($templates->isEmpty()) {
-            $templates = WorkoutTemplate::where('is_generic', true)
-                ->inRandomOrder()
-                ->limit(7)
-                ->get();
-                
-            // If still no templates, create some basic ones
-            if ($templates->isEmpty()) {
-                // This is a fallback if no templates exist at all
-                Log::warning('No workout templates found for user #' . $profile->user_id);
-                
-                // Return empty collection to avoid errors
-                return collect([]);
-            }
-        }
-        
-        return $templates;
+        return $schedules;
     }
 }

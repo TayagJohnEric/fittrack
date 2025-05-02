@@ -165,9 +165,35 @@ class User extends Authenticatable
      */
     public function hasCompletedOnboarding()
     {
-        return $this->nutritionGoals()->exists() && 
-               $this->bmiRecords()->exists() && 
-               $this->weightHistory()->exists() && 
-               $this->workoutSchedules()->exists();
+        if (!$this->profile) {
+            return false;
+        }
+
+        // Check if all essential profile fields are filled
+        $profileComplete = $this->profile->first_name &&
+               $this->profile->last_name &&
+               $this->profile->date_of_birth &&
+               $this->profile->sex &&
+               $this->profile->height_cm &&
+               $this->profile->current_weight_kg &&
+               $this->profile->activity_level_id &&
+               $this->profile->fitness_goal_id &&
+               $this->profile->experience_level_id &&
+               $this->profile->workout_type_id;
+
+        if (!$profileComplete) {
+            return false;
+        }
+
+        // Check if nutrition goals exist
+        $hasNutritionGoals = $this->nutritionGoals()->exists();
+
+        // Check if workout schedules exist
+        $hasWorkoutSchedules = $this->workoutSchedules()->exists();
+
+        // Check if BMI record exists
+        $hasBmiRecord = $this->bmiRecords()->exists();
+
+        return $profileComplete && $hasNutritionGoals && $hasWorkoutSchedules && $hasBmiRecord;
     }
 }
