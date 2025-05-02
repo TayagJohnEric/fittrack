@@ -119,56 +119,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- Workout Schedule -->
-        <div class="bg-gray-50 rounded-lg border border-gray-200 shadow-sm mt-6">
-            <div class="bg-gray-50 text-gray-800 px-4 py-3 rounded-t-lg">
-                <h3 class="font-semibold text-lg flex items-center">
-                    <i class="fas fa-calendar-alt mr-2 text-gray-700"></i>
-                    Your Workout Schedule
-                </h3>
-            </div>
-            <div class="p-5">
-                @if(count($workoutSchedules) > 0)
-                    <div class="overflow-x-auto">
-                        <table class="min-w-full divide-y divide-gray-200">
-                            <thead>
-                                <tr>
-                                    <th class="px-3 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                                    <th class="px-3 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Workout</th>
-                                    <th class="px-3 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
-                                    <th class="px-3 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Duration</th>
-                                    <th class="px-3 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                                </tr>
-                            </thead>
-                            <tbody class="bg-white divide-y divide-gray-200">
-                                @foreach($workoutSchedules as $schedule)
-                                    <tr class="hover:bg-gray-50">
-                                        <td class="px-3 py-4 whitespace-nowrap text-sm text-gray-900">{{ $schedule->assigned_date->format('D, M d') }}</td>
-                                        <td class="px-3 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ $schedule->workoutTemplate->title }}</td>
-                                        <td class="px-3 py-4 whitespace-nowrap text-sm text-gray-500">{{ $schedule->workoutTemplate->workoutType->name ?? 'General' }}</td>
-                                        <td class="px-3 py-4 whitespace-nowrap text-sm text-gray-500">{{ $schedule->workoutTemplate->estimated_duration_minutes }} min</td>
-                                        <td class="px-3 py-4 whitespace-nowrap text-sm">
-                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
-                                                {{ $schedule->status }}
-                                            </span>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                @else
-                    <div class="flex items-center justify-center py-10 text-gray-500 text-center">
-                        <div>
-                            <i class="fas fa-calendar-plus text-2xl mb-3"></i>
-                            <p>No workout schedule has been created yet.</p>
-                            <p class="text-sm mt-1">Visit your dashboard to set up your first workout!</p>
-                        </div>
-                    </div>
-                @endif
-            </div>
-        </div>
     </div>
 </div>
 

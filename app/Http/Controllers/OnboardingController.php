@@ -55,16 +55,12 @@ class OnboardingController extends Controller
         // 3. Generate personalized nutrition goals
         $nutritionGoals = $this->generateNutritionGoals($user, $profile);
         
-        // 4. Assign workout templates based on user preferences
-        $workoutSchedules = $this->assignWorkoutSchedules($user, $profile);
-        
         // 5. Show confirmation summary and redirect to dashboard
         return view('profile.onboarding_summary', compact(
             'profile', 
             'bmiRecord', 
             'weightRecord', 
-            'nutritionGoals', 
-            'workoutSchedules'
+            'nutritionGoals'
         ))->with('success', 'Onboarding completed successfully!');
     }
     
@@ -173,54 +169,5 @@ class OnboardingController extends Controller
                 'last_updated' => now()
             ]
         );
-    }
-    
-    /**
-     * Assign workout templates based on user preferences
-     *
-     * @param \App\Models\User $user
-     * @param \App\Models\UserProfile $profile
-     * @return array
-     */
-    private function assignWorkoutSchedules($user, $profile)
-    {
-        // Get appropriate workout templates based on user preferences
-        $templates = WorkoutTemplate::where('workout_type_id', $profile->workout_type_id)
-            ->where('experience_level_id', $profile->experience_level_id)
-            ->get();
-            
-        if ($templates->isEmpty()) {
-            Log::warning('No workout templates found for user preferences: ' . $user->id);
-            return [];
-        }
-        
-        $schedules = [];
-        $startDate = Carbon::today();
-        
-        // Assign workouts for the next 7 days
-        for ($i = 0; $i < 7; $i++) {
-            $date = $startDate->copy()->addDays($i);
-            
-            // Skip if it's a rest day (e.g., every 4th day)
-            if ($i > 0 && $i % 4 === 0) {
-                continue;
-            }
-            
-            // Select a template (cycling through available templates)
-            $template = $templates[$i % $templates->count()];
-            
-            // Create workout schedule
-            $schedule = UserWorkoutSchedule::create([
-                'user_id' => $user->id,
-                'template_id' => $template->id,
-                'assigned_date' => $date,
-                'status' => 'Pending',
-                'user_notes' => 'Initial workout assignment'
-            ]);
-            
-            $schedules[] = $schedule;
-        }
-        
-        return $schedules;
     }
 }

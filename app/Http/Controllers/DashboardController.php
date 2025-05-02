@@ -49,19 +49,11 @@ class DashboardController extends Controller
             // Get nutrition goals
             $nutritionGoals = UserNutritionGoal::where('user_id', $user->id)->first();
             
-            // Get workout schedules
-            $workoutSchedules = UserWorkoutSchedule::where('user_id', $user->id)
-                ->where('assigned_date', '>=', Carbon::today())
-                ->orderBy('assigned_date')
-                ->take(7)
-                ->get();
-            
             return view('user.dashboard', compact(
                 'user',
                 'profile',
                 'bmiRecord',
-                'nutritionGoals',
-                'workoutSchedules'
+                'nutritionGoals'
             ));
         } catch (\Exception $e) {
             Log::error('Dashboard error: ' . $e->getMessage());

@@ -188,12 +188,9 @@ class User extends Authenticatable
         // Check if nutrition goals exist
         $hasNutritionGoals = $this->nutritionGoals()->exists();
 
-        // Check if workout schedules exist
-        $hasWorkoutSchedules = $this->workoutSchedules()->exists();
-
         // Check if BMI record exists
         $hasBmiRecord = $this->bmiRecords()->exists();
 
-        return $profileComplete && $hasNutritionGoals && $hasWorkoutSchedules && $hasBmiRecord;
+        return $profileComplete && $hasNutritionGoals && $hasBmiRecord;
     }
 }
