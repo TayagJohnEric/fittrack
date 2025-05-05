@@ -20,12 +20,7 @@ class WorkoutTypeSeeder extends Seeder
             ['name' => 'CrossFit'],
             ['name' => 'Calisthenics'],
             ['name' => 'HIIT'],
-            ['name' => 'Cardio'],
-            ['name' => 'Yoga'],
-            ['name' => 'Pilates'],
             ['name' => 'Functional Training'],
-            ['name' => 'Circuit Training'],
-            ['name' => 'Olympic Weightlifting'],
         ];
 
         foreach ($workoutTypes as $workoutType) {

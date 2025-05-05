@@ -18,7 +18,6 @@ class ExperienceLevelSeeder extends Seeder
             ['name' => 'Beginner'],
             ['name' => 'Intermediate'],
             ['name' => 'Advanced'],
-            ['name' => 'Elite'],
         ];
 
         foreach ($experienceLevels as $experienceLevel) {

@@ -171,7 +171,7 @@
                                             @foreach($workoutSchedules as $schedule)
                                                 <tr class="hover:bg-gray-50">
                                                     <td class="px-3 py-4 whitespace-nowrap text-sm text-gray-900">{{ $schedule->assigned_date->format('D, M d') }}</td>
-                                                    <td class="px-3 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ $schedule->workoutTemplate->title }}</td>
+                                                    <td class="px-3 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ $schedule->workoutTemplate->name }}</td>
                                                     <td class="px-3 py-4 whitespace-nowrap text-sm text-gray-500">{{ $schedule->workoutTemplate->workoutType->name ?? 'General' }}</td>
                                                     <td class="px-3 py-4 whitespace-nowrap text-sm text-gray-500">{{ $schedule->workoutTemplate->estimated_duration_minutes }} min</td>
                                                     <td class="px-3 py-4 whitespace-nowrap text-sm">
