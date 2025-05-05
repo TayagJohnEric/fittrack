@@ -170,4 +170,106 @@ class OnboardingController extends Controller
             ]
         );
     }
+
+    /**
+     * Assign workout templates based on user preferences
+     *
+     * @param \App\Models\User $user
+     * @param \App\Models\UserProfile $profile
+     * @return array
+     */
+    private function assignWorkoutSchedules($user, $profile)
+    {
+        // Check if user already has workout schedules for this week
+        $existingSchedules = UserWorkoutSchedule::where('user_id', $user->id)
+                                               ->whereBetween('assigned_date', [
+                                                   Carbon::today(),
+                                                   Carbon::today()->addDays(7)
+                                               ])
+                                               ->get();
+                                               
+        if ($existingSchedules->count() > 0) {
+            return $existingSchedules;
+        }
+        
+        $workoutSchedules = [];
+        
+        // Get appropriate templates based on user preferences
+        $templates = $this->getWorkoutTemplatesForUser($profile);
+        
+        // Schedule workouts for the next 7 days
+        $startDate = Carbon::tomorrow();
+        foreach ($templates as $index => $template) {
+            // Skip weekends or limit to 5 workouts per week
+            if ($index >= 5) {
+                break;
+            }
+            
+            $assignedDate = $startDate->copy()->addDays($index);
+            
+            // Skip weekend days if needed
+            if ($assignedDate->isWeekend()) {
+                continue;
+            }
+            
+            $workoutSchedule = UserWorkoutSchedule::create([
+                'user_id' => $user->id,
+                'template_id' => $template->id,
+                'assigned_date' => $assignedDate,
+                'status' => 'Pending'
+            ]);
+            
+            $workoutSchedules[] = $workoutSchedule;
+        }
+        
+        return $workoutSchedules;
+    }
+    
+    /**
+     * Get appropriate workout templates for the user
+     *
+     * @param \App\Models\UserProfile $profile
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    private function getWorkoutTemplatesForUser($profile)
+    {
+        $query = WorkoutTemplate::query();
+        
+        // Filter by user experience level
+        if ($profile->experience_level_id) {
+            $query->where('experience_level_id', $profile->experience_level_id);
+        }
+        
+        // Filter by workout type if specified
+        if ($profile->workout_type_id) {
+            $query->where('workout_type_id', $profile->workout_type_id);
+        }
+        
+        // Filter by fitness goal if specified
+        if ($profile->fitness_goal_id) {
+            $query->where('fitness_goal_id', $profile->fitness_goal_id);
+        }
+        
+        // Get a few templates for variety
+        $templates = $query->inRandomOrder()->limit(7)->get();
+        
+        // If no specific templates found, get generic ones
+        if ($templates->isEmpty()) {
+            $templates = WorkoutTemplate::where('is_generic', true)
+                ->inRandomOrder()
+                ->limit(7)
+                ->get();
+                
+            // If still no templates, create some basic ones
+            if ($templates->isEmpty()) {
+                // This is a fallback if no templates exist at all
+                Log::warning('No workout templates found for user #' . $profile->user_id);
+                
+                // Return empty collection to avoid errors
+                return collect([]);
+            }
+        }
+        
+        return $templates;
+    }
 }

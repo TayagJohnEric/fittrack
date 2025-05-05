@@ -101,3 +101,8 @@ Route::middleware(['auth'])->group(function () {
     });
 });
 
+// Onboarding routes
+Route::post('/onboarding/complete', [OnboardingController::class, 'complete'])
+    ->name('onboarding.complete')
+    ->middleware(['auth']);
+
