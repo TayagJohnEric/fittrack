@@ -22,24 +22,25 @@ class AuthController extends Controller
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
         ]);
-
+    
         if ($validator->fails()) {
             return redirect()->back()
                 ->withErrors($validator)
                 ->withInput();
         }
-
+    
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'role' => 'user', // ✅ Ensure role is always 'user'
         ]);
-
+    
         Auth::login($user);
-
+    
         return redirect()->route('profile.setup.basics');
     }
-
+    
     public function showLogin()
     {
         return view('auth.login');

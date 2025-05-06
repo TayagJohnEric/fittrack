@@ -3,6 +3,10 @@
 namespace Database\Seeders;
 
 use App\Models\Exercise;
+use App\Models\FoodItem;
+use App\Models\FoodSuggestionCategory;
+use App\Models\FoodSuggestionTemplate;
+use App\Models\TemplateFoodItem;
 use App\Models\User;
 use App\Models\WorkoutTemplate;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -25,6 +29,10 @@ class DatabaseSeeder extends Seeder
             FoodItemSeeder::class,
             ExerciseSeeder::class,
             WorkoutTemplateSeeder::class,
+            AdminUserSeeder::class,
+            FoodSuggestionCategorySeeder::class,
+            FoodSuggestionTemplateSeeder::class,
+            TemplateFoodItemSeeder::class,
         ]);
     }
 }

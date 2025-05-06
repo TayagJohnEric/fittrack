@@ -355,6 +355,52 @@ class FoodItemSeeder extends Seeder
                 'allergy_info' => null,
                 'image_url' => 'https://example.com/images/sweet-potato.jpg',
             ],
+            // Additional Items
+[
+    'name' => 'Sweet Potato',
+    'serving_size_description' => '1 medium (130g)',
+    'serving_size_grams' => 130,
+    'calories_per_serving' => 112,
+    'protein_grams_per_serving' => 2.0,
+    'carb_grams_per_serving' => 26.0,
+    'fat_grams_per_serving' => 0.1,
+    'allergy_info' => null,
+    'image_url' => 'https://example.com/images/sweet-potato.jpg',
+],
+[
+    'name' => 'Rice Cakes',
+    'serving_size_description' => '1 cake (9g)',
+    'serving_size_grams' => 9,
+    'calories_per_serving' => 35,
+    'protein_grams_per_serving' => 0.7,
+    'carb_grams_per_serving' => 7.3,
+    'fat_grams_per_serving' => 0.3,
+    'allergy_info' => null,
+    'image_url' => 'https://example.com/images/rice-cake.jpg',
+],
+[
+    'name' => 'Coconut Water',
+    'serving_size_description' => '1 cup (240ml)',
+    'serving_size_grams' => 240,
+    'calories_per_serving' => 45,
+    'protein_grams_per_serving' => 0.5,
+    'carb_grams_per_serving' => 9.0,
+    'fat_grams_per_serving' => 0.5,
+    'allergy_info' => null,
+    'image_url' => 'https://example.com/images/coconut-water.jpg',
+],
+[
+    'name' => 'Dark Chocolate (70% cocoa)',
+    'serving_size_description' => '1 oz (28g)',
+    'serving_size_grams' => 28,
+    'calories_per_serving' => 170,
+    'protein_grams_per_serving' => 2.2,
+    'carb_grams_per_serving' => 13.0,
+    'fat_grams_per_serving' => 12.0,
+    'allergy_info' => ['Milk'], // Often contains traces
+    'image_url' => 'https://example.com/images/dark-chocolate.jpg',
+],
+
         ];
 
         foreach ($foodItems as $foodItem) {
